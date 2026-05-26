@@ -1,0 +1,17 @@
+node_modules
+.next
+out
+.env*.local
+.DS_Store
+Thumbs.db
+*.log
+
+# Local IDE/editor settings
+.vscode/
+.idea/
+
+# Claude Code local-only settings (launch.json은 공유 가능)
+.claude/settings.local.json
+
+# 중첩된 원본 자료 사본 (루트와 동일). 필요 없으면 직접 삭제.
+/tcmp-pack/

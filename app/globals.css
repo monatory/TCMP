@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;600;700&family=Gowun+Batang:wght@400;700&family=Cormorant+Garamond:wght@300;400;500;600&display=swap');
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+html, body {
+  background: #F5F1EA;
+  color: #1A1612;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: Pretendard, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+/* 종이 질감 — 따뜻한 빛의 얼룩 여러 겹 + 아주 옅은 결 */
+.paper-texture { position: relative; }
+
+/* 1) 페이지에 떨어지는 따뜻한 빛의 얼룩들 — 다양한 톤이 부드럽게 섞인다 */
+.paper-texture::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    /* 좌상단 따뜻한 화이트 글로우 */
+    radial-gradient(ellipse 55% 45% at 18% 12%, rgba(255, 248, 230, 0.55) 0%, transparent 65%),
+    /* 우상단 살구빛 */
+    radial-gradient(ellipse 48% 38% at 85% 25%, rgba(250, 228, 198, 0.42) 0%, transparent 70%),
+    /* 중앙 좌측 따뜻한 누런 빛 */
+    radial-gradient(ellipse 40% 30% at 8% 55%, rgba(245, 225, 195, 0.35) 0%, transparent 70%),
+    /* 하단 중앙 옅은 골든 워시 */
+    radial-gradient(ellipse 65% 45% at 55% 92%, rgba(232, 210, 175, 0.32) 0%, transparent 70%),
+    /* 우중하단 살짝 차가운 베이지 */
+    radial-gradient(ellipse 45% 35% at 92% 75%, rgba(220, 215, 200, 0.28) 0%, transparent 72%);
+}
+
+/* 2) 미세한 결 — 거의 보이지 않을 정도로만 */
+.paper-texture::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.78  0 0 0 0 0.67  0 0 0 0 0.50  0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: 240px 240px;
+  background-repeat: repeat;
+  opacity: 0.14;
+  mix-blend-mode: multiply;
+}
+
+/* 애니메이션 */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes drawLine {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+.anim-fade-up { animation: fadeUp 0.6s ease-out both; }
+.anim-fade { animation: fadeIn 0.8s ease-out both; }
+.anim-draw { animation: drawLine 1.2s ease-out 0.3s both; transform-origin: left; }
+
+/* stagger delay 유틸 */
+.delay-1 { animation-delay: 0.10s; }
+.delay-2 { animation-delay: 0.25s; }
+.delay-3 { animation-delay: 0.40s; }
+.delay-4 { animation-delay: 0.55s; }
+.delay-5 { animation-delay: 0.70s; }
+.delay-6 { animation-delay: 0.85s; }
+
+/* 본문 한글 가독성 */
+.prose-kr {
+  font-family: "Noto Serif KR", "Gowun Batang", serif;
+  line-height: 1.85;
+}
+
+/* 결과 코드 글자 stagger */
+.code-letter { animation: fadeUp 0.7s ease-out both; }
+.code-letter:nth-child(1) { animation-delay: 0.10s; }
+.code-letter:nth-child(2) { animation-delay: 0.25s; }
+.code-letter:nth-child(3) { animation-delay: 0.40s; }
+.code-letter:nth-child(4) { animation-delay: 0.55s; }

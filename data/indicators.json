@@ -1,0 +1,73 @@
+{
+  "1": {
+    "id": 1,
+    "name": "사고와 성찰",
+    "subtitle": "사유의 방향",
+    "questionIds": [1, 2, 3, 4],
+    "max": 20,
+    "cutoff": 12,
+    "light": "M",
+    "dark": "R",
+    "lightName": "성찰",
+    "lightEn": "Mindful",
+    "lightDescription": "멈추어 자신을 들여다본다",
+    "darkName": "반추",
+    "darkEn": "Rumination",
+    "darkDescription": "같은 생각에 갇혀 맴돈다"
+  },
+  "2": {
+    "id": 2,
+    "name": "행동과 실행",
+    "subtitle": "실천의 속도",
+    "questionIds": [5, 6, 7, 8],
+    "max": 20,
+    "cutoff": 12,
+    "light": "E",
+    "dark": "H",
+    "lightName": "실행",
+    "lightEn": "Execute",
+    "lightDescription": "불완전해도 일단 시작한다",
+    "darkName": "망설임",
+    "darkEn": "Hesitation",
+    "darkDescription": "준비가 끝나기를 기다린다"
+  },
+  "3": {
+    "id": 3,
+    "name": "위기와 성장",
+    "subtitle": "시련의 해석",
+    "questionIds": [9, 10, 11, 12, 13, 14, 15, 16],
+    "max": 40,
+    "cutoff": 24,
+    "light": "G",
+    "dark": "F",
+    "lightName": "성장",
+    "lightEn": "Growth",
+    "lightDescription": "시련을 의미로 번역한다",
+    "darkName": "고정",
+    "darkEn": "Fixed",
+    "darkDescription": "시련 앞에서 무릎이 꺾인다"
+  },
+  "4": {
+    "id": 4,
+    "name": "관계와 확장",
+    "subtitle": "연대의 가치",
+    "questionIds": [17, 18, 19, 20],
+    "max": 20,
+    "cutoff": 12,
+    "light": "C",
+    "dark": "I",
+    "lightName": "연대",
+    "lightEn": "Connection",
+    "lightDescription": "함께 걷는 길을 안다",
+    "darkName": "고립",
+    "darkEn": "Isolation",
+    "darkDescription": "혼자의 길에 갇혀 있다"
+  },
+  "zones": {
+    "light":       { "label": "빛의 영역",      "en": "Light",        "order": 0, "color": "#C8924B", "lightCount": 4 },
+    "mostlyLight": { "label": "빛에 가까운",    "en": "Mostly Light", "order": 1, "color": "#B08246", "lightCount": 3 },
+    "balanced":    { "label": "균형 지대",      "en": "Balanced",     "order": 2, "color": "#8A7355", "lightCount": 2 },
+    "mostlyDark":  { "label": "어둠에 가까운",  "en": "Mostly Dark",  "order": 3, "color": "#5C5246", "lightCount": 1 },
+    "dark":        { "label": "어둠의 영역",    "en": "Dark",         "order": 4, "color": "#2E2A24", "lightCount": 0 }
+  }
+}
