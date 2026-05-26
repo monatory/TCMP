@@ -1,6 +1,29 @@
-# TCMP 클로드 코드 빌드 팩
+# TCMP — Tunnel-Cave Mindset Profile
 
-> 이 폴더는 Claude Code(클로드 코드)에게 던지면 TCMP 자가진단 웹 앱을 **처음부터 끝까지** 만들어줄 수 있도록 구성된 빌드 키트입니다.
+20문항 5점 척도 한국어 심리 자가진단 웹 앱. 4지표로 측정해 16가지 마인드셋 코드 중 하나로 결과를 도출합니다.
+
+## 🌐 배포 (GitHub Pages)
+
+- **공개 URL**: https://monatory.github.io/TCMP/
+- **관리자**: `/admin` (PIN: `1612`)
+- `main` 또는 `master` 브랜치에 push되면 [.github/workflows/deploy.yml](.github/workflows/deploy.yml)이 자동으로 정적 export 빌드 후 GitHub Pages에 배포합니다.
+- 배포 후 GitHub 리포지토리 **Settings → Pages → Build and deployment → Source** 를 **"GitHub Actions"** 로 설정해야 합니다(최초 1회).
+
+## 🛠 로컬 실행
+
+```bash
+npm install
+npm run dev      # http://localhost:3000
+npm run build    # 정적 export → out/ 생성
+node scripts/test-scoring.mjs              # 채점 함수 검증
+node scripts/test-16-codes-roundtrip.mjs   # 16개 코드 라운드트립 + 콘텐츠 충실성
+```
+
+---
+
+## 📦 빌드 키트 (Claude Code용 — 원본 자료)
+
+> 아래 섹션은 이 프로젝트를 처음부터 다시 만들 때 Claude Code에 던지는 빌드 키트 가이드입니다.
 
 ---
 
