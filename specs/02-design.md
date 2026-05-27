@@ -12,19 +12,21 @@
 
 ## 색상 토큰
 
+실제 토큰은 `tailwind.config.js`가 single source of truth. 아래 표는 의도/용도 가이드.
+
 | 토큰 | HEX | 용도 |
 |---|---|---|
 | **cream** | `#F5F1EA` | 페이지 배경 (오래된 종이) |
 | **ink** | `#1A1612` | 본문 텍스트 / 어두운 카드 / 강조 버튼 |
-| **gold** | `#C8924B` | 단일 액센트 (터널의 빛) — 절대 남용 금지 |
+| **gold** | `#B57C36` | 단일 액센트 (터널의 빛) — 절대 남용 금지 |
+| gold-dark | `#9C7138` | 작은 골드 라벨 · 5영역 그라데이션 |
 | gray-text | `#3A332B` | 본문 보조 |
 | gray-dark | `#5A5249` | 메타 정보 |
-| gray-mid | `#8A7355` | 라벨·캡션 |
-| gray-light | `#A39685` | 가장 옅은 텍스트 |
+| gray-mid | `#75614A` | 라벨·캡션 |
+| gray-light | `#7E6B53` | 가장 옅은 텍스트 (작은 라벨에서는 gray-mid 권장) |
 | beige-dark | `#C9BFAE` | 테두리 (어두운 쪽) |
 | beige-mid | `#D9D2C5` | 구분선 |
 | beige-light | `#E5DFD2` | 가는 구분선 |
-| gold-dark | `#B08246` | 5영역 그라데이션 |
 | shadow | `#5C5246` | 5영역 그라데이션 (어둠 쪽) |
 | dark | `#2E2A24` | 5영역 그라데이션 끝점 |
 
@@ -33,28 +35,10 @@
 - 그라데이션은 5영역 스펙트럼 바와 처방 카드 상단 라인에만 허용
 - 다른 곳에 그라데이션·드롭섀도 추가 금지
 
-### tailwind.config.js 매핑 예시
-```js
-theme: {
-  extend: {
-    colors: {
-      cream: '#F5F1EA',
-      ink: '#1A1612',
-      gold: '#C8924B',
-      'gold-dark': '#B08246',
-      'gray-text': '#3A332B',
-      'gray-dark': '#5A5249',
-      'gray-mid': '#8A7355',
-      'gray-light': '#A39685',
-      'beige-dark': '#C9BFAE',
-      'beige-mid': '#D9D2C5',
-      'beige-light': '#E5DFD2',
-      shadow: '#5C5246',
-      dark: '#2E2A24',
-    },
-  },
-}
-```
+### 접근성 노트
+- 본문(`gray-text` on cream)은 AAA(11:1)
+- 작은 라벨(10~12px)에서는 `gray-light`(4.53:1, AA 경계선)보다 `gray-mid`(5.23:1) 사용
+- 11px 골드 라벨은 AA 미달(3.16:1). 12px font-medium + `gold-dark`(3.86:1)로 사용하거나 18px+ large text로만
 
 ---
 
@@ -122,15 +106,23 @@ theme: {
 - hover: 배경이 `bg-ink`, 텍스트가 `text-cream`으로 반전
 
 ### Likert 점수 버튼 (1~5)
-- 원형: `w-10 h-10 rounded-full`
+- 원형: `w-11 h-11 rounded-full` (WCAG 44px 최소 터치 영역)
+- 폰트: Cormorant Garamond 16px
 - 비선택: 테두리 `border-beige-dark`, 텍스트 `text-gray-dark`
 - 선택: 배경 `bg-ink`, 텍스트 `text-cream`, scale 1.1
 - hover (비선택): 테두리 `border-ink`로 어두워짐
-- 양 옆 라벨: "전혀 그렇지 않다" ~ "매우 그렇다" (모바일에서는 양 끝만 표시)
+- 양 옆 라벨: "전혀 그렇지 않다" ~ "매우 그렇다" — 12px gray-mid (모바일에서는 행 아래 양 끝, 데스크탑은 좌우)
+
+### 인구통계 칩 (선택형)
+- `inline-flex items-center justify-center min-h-[44px] px-4 rounded-full`
+- 폰트: Noto Serif KR 14px
+- 비선택: 테두리 `border-beige-dark`, 배경 투명
+- 선택: 배경 `bg-ink`, 텍스트 `text-cream`
+- `aria-pressed` 필수
 
 ### 진행 표시 (ProgressBar)
-- 가로 1px 선, 배경 `bg-beige-mid`
-- 진행분만 `bg-gold`, 500ms ease 트랜지션
+- 가로 1.5px 선, 배경 `bg-beige-mid rounded-full`
+- 진행분만 `bg-gold rounded-full`, 500ms ease 트랜지션
 - 상단에 `01 / 05` 형식 카운터 + UPPERCASE 라벨
 
 ### 구분선
@@ -143,12 +135,32 @@ theme: {
 - 좌측에 작은 ✨ 아이콘 (lucide Sparkles)
 
 ### 처방 카드 (가장 중요)
-- 배경: `bg-ink` (어두운 잉크색)
-- 텍스트: `text-cream`
-- 상단에 1px 황금 그라데이션 라인: `bg-gradient-to-r from-gold to-transparent`
+페이지의 타이포그래픽 정점. 결과 화면의 다른 모든 요소보다 또렷이 떠야 한다.
+- 배경: `bg-ink`, 텍스트: `text-cream`
+- 상단에 2px 골드 center-fade 라인: `bg-gradient-to-r from-transparent via-gold to-transparent`
+- 라벨 "오늘의 처방": Sparkles 14px gold 아이콘 + 12px font-medium tracking-[0.3em] cream/80 uppercase
+- 본문: Noto Serif KR 17~19px, `leading-[1.9]`
 - 라운드: `rounded-2xl`
-- 패딩: `p-7 sm:p-8`
-- 본문은 Noto Serif KR 16px, line-height 1.85
+- 패딩: `px-7 py-9 sm:px-10 sm:py-11`
+- 위 여백: `mt-16` (위 인용·해석 섹션과 분리감)
+- drop-shadow 금지 (종이 톤 유지)
+
+### 키보드 포커스
+모든 인터랙티브 요소는 `:focus-visible` 시 잉크 톤의 부드러운 outline 노출. globals.css 전역 규칙으로 처리:
+```css
+:where(button, a, summary, [role="button"], input, select, textarea):focus-visible {
+  outline: 2px solid rgba(26, 22, 18, 0.45);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+```
+
+### Back-to-top (결과 페이지 전용)
+긴 결과 페이지(~2700px 모바일) 보조 네비.
+- `fixed bottom-6 right-6 z-20 w-11 h-11 rounded-full bg-ink/85 backdrop-blur-sm text-cream`
+- `scrollY > 600` 일 때만 opacity 1, 아니면 0 + pointer-events none
+- `window.scrollTo({ top: 0, behavior: 'smooth' })`
+- aria-label "페이지 상단으로"
 
 ---
 
@@ -179,14 +191,25 @@ theme: {
 
 ## 데코레이션
 
-### 배경 텍스처
-페이지 전역에 매우 옅은 점 패턴(opacity 0.025) 깔기:
-```css
-background-image:
-  radial-gradient(circle at 20% 30%, #1A1612 1px, transparent 1px),
-  radial-gradient(circle at 80% 70%, #1A1612 1px, transparent 1px);
-background-size: 40px 40px, 60px 60px;
-```
+### 배경 텍스처 (paper-texture)
+"늦가을 오후 햇살이 종이에 떨어진" 톤. globals.css의 `.paper-texture::before`와 `::after`로 구현된 두 겹:
+
+1. **종이 결**: 미세한 fractalNoise SVG, opacity 0.14, `mix-blend-mode: multiply`
+2. **빛의 워시**: 6겹 radial-gradient
+   - 좌상단 따뜻한 화이트 글로우
+   - 우상단 호박빛 (가을 오후 햇살)
+   - 중앙 좌측 누런 빛
+   - 우중단 옅은 단풍 적갈색 워시 (alpha ~0.14)
+   - 하단 중앙 골든 워시
+   - 좌하단 옅은 갈색 책장 그림자
+
+전체 워시 알파는 0.10–0.32 범위로 절제. 페이지가 "장식된" 게 아니라 "따뜻한 종이"로 읽혀야 한다.
+
+### 결과 코드 챕터 ornament
+MEGC 4글자 위·아래에 책 챕터 표지 인상을 위한 ornament:
+- **위**: `── ❦ ──` (gold/60% 좌우 12 너비 라인 + ❦ 14px)
+- **아래**: `·  ·  ·` (gold/50% 8px tracking 0.4em)
+- 모두 `aria-hidden="true"`, 의미는 sr-only h1에 위임
 
 ### 빛/어둠 스펙트럼 바
 - 결과 화면에 등장하는 핵심 시각 요소

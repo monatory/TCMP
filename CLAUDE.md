@@ -24,7 +24,7 @@
 - **Icons**: lucide-react
 - **State**: useState/useReducer (외부 상태 라이브러리 없이)
 - **Persistence**: localStorage (브라우저 저장만, DB 없음)
-- **Deployment 타깃**: Vercel
+- **Deployment 타깃**: GitHub Pages (Next.js 정적 export)
 
 ⚠️ **금지 사항**
 - 다른 UI 라이브러리(MUI, Chakra 등) 추가 금지
@@ -33,31 +33,46 @@
 
 ---
 
-## 디렉터리 구조 (이대로 만들기)
+## 디렉터리 구조
 
 ```
 .
 ├── app/
 │   ├── layout.jsx          # 루트 레이아웃, 폰트 import
 │   ├── page.jsx            # 메인 페이지 (TcmpApp 마운트)
-│   └── globals.css         # Tailwind + 폰트 + CSS 변수
+│   ├── globals.css         # Tailwind + 폰트 + paper-texture + focus ring
+│   └── admin/
+│       └── page.jsx        # 관리자 통계 페이지 (PIN 보호)
 ├── components/
 │   ├── TcmpApp.jsx         # 최상위 컨테이너 (상태·라우팅)
 │   ├── screens/
 │   │   ├── IntroScreen.jsx
+│   │   ├── DemographicsScreen.jsx   # 본 진단 전 인구통계 칩 4종
 │   │   ├── QuestionScreen.jsx
-│   │   └── ResultScreen.jsx
-│   └── ui/
-│       ├── ProgressBar.jsx
-│       ├── LikertRow.jsx
-│       └── Section.jsx
+│   │   └── ResultScreen.jsx         # 결과 코드 + 처방 카드 + BackToTop
+│   ├── ui/
+│   │   ├── ProgressBar.jsx
+│   │   ├── LikertRow.jsx
+│   │   └── Section.jsx
+│   └── admin/
+│       ├── AdminApp.jsx    # PIN 게이트 + 세션 unlock
+│       └── StatsView.jsx   # 접이식 통계 블록 (영역/코드/지표/인구통계 × 영역)
 ├── lib/
 │   ├── scoring.js          # 채점 로직 (순수 함수, 테스트 가능)
-│   └── storage.js          # localStorage 래퍼
+│   ├── storage.js          # localStorage 래퍼 (v1→v2 마이그레이션)
+│   ├── demographics.js     # 인구통계 필드 정의 + 라벨 변환
+│   └── csv.js              # CSV 내보내기 (Excel 호환, BOM)
 ├── data/
 │   ├── questions.json      # 20문항 (수정 금지)
 │   ├── codes.json          # 16코드 해석 (수정 금지)
 │   └── indicators.json     # 4지표 메타 (수정 금지)
+├── scripts/
+│   ├── test-scoring.mjs            # spec 3 케이스 회귀 테스트
+│   ├── test-16-codes-roundtrip.mjs # 16코드 라운드트립 테스트
+│   └── test-all-codes.mjs
+├── .github/workflows/
+│   ├── deploy.yml          # GitHub Pages 정적 export (회귀 테스트 게이트 포함)
+│   └── test.yml            # push/PR마다 회귀 테스트
 ├── specs/                  # 스펙 문서 (참조용)
 ├── CLAUDE.md               # 이 파일
 ├── package.json
@@ -65,6 +80,17 @@
 ├── tailwind.config.js
 └── postcss.config.js
 ```
+
+### 관리자 페이지 (`/admin/`)
+- 진단 결과를 디바이스에 누적 저장한 다음 상담사용 통계로 조회
+- 진입 시 PIN 게이트 (기본값 `1612`, 운영 시 `NEXT_PUBLIC_ADMIN_PIN`으로 오버라이드)
+- StatsView는 접이식 블록 — 영역별 분포만 기본 펼침, 나머지 4개는 접힘
+- CSV 다운로드 (Excel 호환 BOM), 응답 데이터 초기화
+
+### 회귀 테스트
+- `node scripts/test-scoring.mjs` — spec 3 케이스
+- `node scripts/test-16-codes-roundtrip.mjs` — 16코드 모두 확인
+- 두 스크립트가 `deploy.yml` 빌드 전에 게이트로 돌아 회귀 시 배포 차단
 
 ---
 
@@ -89,16 +115,20 @@
 - 한글 디스플레이는 Gowun Batang/Noto Serif KR, 본문은 Pretendard
 - 알파벳 4글자 코드는 Cormorant Garamond 이탤릭
 
-### 4. 화면 흐름은 7단계
-0(인트로) → 1(지표 1) → 2(지표 2) → 3(지표 3 전반) → 4(지표 3 후반) → 5(지표 4) → 6(결과)
+### 4. 화면 흐름은 8단계
+0(인트로) → D(인구통계) → 1(지표 1) → 2(지표 2) → 3(지표 3 전반) → 4(지표 3 후반) → 5(지표 4) → 6(결과)
 
-지표 3은 8문항이라 두 화면으로 분할. 자세한 내용은 `specs/03-flow.md`.
+지표 3은 8문항이라 두 화면으로 분할. 인구통계는 통계용으로만 쓰이고 결과 해석에는 영향 없음. 자세한 내용은 `specs/03-flow.md`.
 
 ### 5. 처방(prescription)을 강조
 결과 화면에서 강점·그림자보다 **처방(오늘 할 행동)**이 시각적으로 가장 두드러져야 한다. 어두운 배경 + 황금 액센트 라인이 들어간 카드로 처리. 이게 책의 핵심 차별점이자 앱의 가치 지점.
 
-### 6. 모바일 우선
-모든 화면을 좁은 모바일 뷰포트(360px)에서 먼저 검수. 그다음 데스크탑 확인.
+### 6. 모바일 우선 + 접근성 기본선
+모든 화면을 좁은 모바일 뷰포트(360px)에서 먼저 검수. 그다음 데스크탑(768px) 확인.
+- 인터랙티브 요소 터치 영역 최소 44×44px (Likert, 칩, 버튼)
+- 작은 텍스트(10~12px)의 색은 `gray-mid` 이상 (대비 AA 5:1+)
+- 키보드 포커스 ring은 globals.css 전역 규칙 — 별도로 끄지 말 것
+- 의미 있는 비텍스트 요소(예: 결과 코드 글자)는 sr-only h1 + 자식 `aria-hidden`
 
 ---
 
