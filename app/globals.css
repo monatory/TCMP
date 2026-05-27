@@ -25,7 +25,7 @@ html, body {
 /* 종이 질감 — 따뜻한 빛의 얼룩 여러 겹 + 아주 옅은 결 */
 .paper-texture { position: relative; }
 
-/* 1) 페이지에 떨어지는 따뜻한 빛의 얼룩들 — 다양한 톤이 부드럽게 섞인다 */
+/* 1) 페이지에 떨어지는 늦가을 오후의 빛 — 단풍빛 워시가 부드럽게 섞인다 */
 .paper-texture::after {
   content: '';
   position: fixed;
@@ -33,16 +33,18 @@ html, body {
   pointer-events: none;
   z-index: 0;
   background:
-    /* 좌상단 따뜻한 화이트 글로우 */
-    radial-gradient(ellipse 55% 45% at 18% 12%, rgba(255, 248, 230, 0.55) 0%, transparent 65%),
-    /* 우상단 살구빛 */
-    radial-gradient(ellipse 48% 38% at 85% 25%, rgba(250, 228, 198, 0.42) 0%, transparent 70%),
+    /* 좌상단 따뜻한 화이트 글로우 — 햇살이 떨어지는 자리 */
+    radial-gradient(ellipse 55% 45% at 18% 12%, rgba(255, 246, 226, 0.55) 0%, transparent 65%),
+    /* 우상단 호박빛 — 가을 오후 햇살 */
+    radial-gradient(ellipse 48% 38% at 85% 25%, rgba(232, 178, 110, 0.32) 0%, transparent 72%),
     /* 중앙 좌측 따뜻한 누런 빛 */
-    radial-gradient(ellipse 40% 30% at 8% 55%, rgba(245, 225, 195, 0.35) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 30% at 8% 55%, rgba(238, 210, 170, 0.32) 0%, transparent 70%),
+    /* 우중단 옅은 단풍 적갈색 워시 — 가을 잎의 그림자 */
+    radial-gradient(ellipse 42% 32% at 88% 60%, rgba(188, 122, 78, 0.14) 0%, transparent 78%),
     /* 하단 중앙 옅은 골든 워시 */
-    radial-gradient(ellipse 65% 45% at 55% 92%, rgba(232, 210, 175, 0.32) 0%, transparent 70%),
-    /* 우중하단 살짝 차가운 베이지 */
-    radial-gradient(ellipse 45% 35% at 92% 75%, rgba(220, 215, 200, 0.28) 0%, transparent 72%);
+    radial-gradient(ellipse 65% 45% at 55% 92%, rgba(220, 178, 130, 0.26) 0%, transparent 74%),
+    /* 좌하단 살짝 어두운 갈색 — 책장 그림자 */
+    radial-gradient(ellipse 38% 28% at 8% 95%, rgba(140, 100, 70, 0.10) 0%, transparent 80%);
 }
 
 /* 2) 미세한 결 — 거의 보이지 않을 정도로만 */

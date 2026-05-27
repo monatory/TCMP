@@ -42,7 +42,7 @@ export default function QuestionScreen({ screenIndex, answers, onAnswer, onPrev,
                 지표 {screen.indicator}
               </span>
               {screen.part && (
-                <span className="text-[10px] tracking-[0.25em] text-gray-light">
+                <span className="text-[11px] tracking-[0.25em] text-gray-mid">
                   {screen.part}
                 </span>
               )}

@@ -73,8 +73,8 @@ export default function IntroScreen({ onStart, latest, onShowLatest }) {
             </button>
           )}
 
-          <p className="mt-2 text-[11px] tracking-[0.2em] text-gray-light">소요 시간 약 5분</p>
-          <p className="text-[11px] tracking-[0.15em] text-gray-light">가장 솔직한 자신의 모습에 응답해 주세요</p>
+          <p className="mt-2 text-[11px] tracking-[0.2em] text-gray-mid">소요 시간 약 5분</p>
+          <p className="text-[11px] tracking-[0.15em] text-gray-mid">가장 솔직한 자신의 모습에 응답해 주세요</p>
         </div>
       </div>
     </div>

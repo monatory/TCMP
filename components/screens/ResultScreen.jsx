@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Compass, Sparkles, RotateCcw, Share2 } from 'lucide-react';
+import { Compass, Sparkles, RotateCcw, Share2, ArrowUp } from 'lucide-react';
 import Section from '../ui/Section';
 import indicators from '../../data/indicators.json';
 import { getSpectrumPercent } from '../../lib/scoring';
@@ -67,6 +67,17 @@ export default function ResultScreen({ result, onRestart }) {
 
         <div className="mt-10 text-center">
           <h1 className="sr-only">결과 코드 {code} · {data.nickname}</h1>
+
+          {/* 챕터 표지 ornament — 위 */}
+          <div
+            className="flex items-center justify-center gap-3 mb-6 text-gold/60"
+            aria-hidden="true"
+          >
+            <span className="h-px w-12 bg-current" />
+            <span className="font-code text-[14px] leading-none translate-y-[-1px]">❦</span>
+            <span className="h-px w-12 bg-current" />
+          </div>
+
           <div
             className="flex justify-center items-baseline gap-3 sm:gap-5"
             aria-hidden="true"
@@ -80,6 +91,14 @@ export default function ResultScreen({ result, onRestart }) {
                 {l}
               </span>
             ))}
+          </div>
+
+          {/* 챕터 표지 ornament — 아래 */}
+          <div
+            className="flex items-center justify-center gap-2 mt-6 text-gold/50"
+            aria-hidden="true"
+          >
+            <span className="text-[8px] tracking-[0.4em]">·  ·  ·</span>
           </div>
         </div>
 
@@ -162,14 +181,17 @@ export default function ResultScreen({ result, onRestart }) {
         </div>
 
         {/* 처방 카드 — 가장 중요 */}
-        <div className="mt-10 anim-fade-up">
-          <div className="relative rounded-2xl bg-ink text-cream p-7 sm:p-9 overflow-hidden">
-            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-gold via-gold/40 to-transparent" />
-            <div className="text-[11px] tracking-[0.3em] text-cream/60 mb-5">
-              <Sparkles size={13} strokeWidth={1.5} className="inline mr-2 -mt-0.5 text-gold" />
-              오늘의 처방
+        <div className="mt-16 anim-fade-up">
+          <div className="relative rounded-2xl bg-ink text-cream px-7 py-9 sm:px-10 sm:py-11 overflow-hidden">
+            {/* 상단 골드 라인 — 더 또렷한 그라데이션 */}
+            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-gold to-transparent" />
+            <div className="flex items-center gap-2 mb-6">
+              <Sparkles size={14} strokeWidth={1.5} className="text-gold shrink-0" />
+              <span className="text-[12px] font-medium tracking-[0.3em] text-cream/80 uppercase">
+                오늘의 처방
+              </span>
             </div>
-            <p className="prose-kr text-[16px] sm:text-[17px] text-cream leading-[1.85]">
+            <p className="prose-kr text-[17px] sm:text-[19px] text-cream leading-[1.9]">
               {data.prescription}
             </p>
           </div>
@@ -206,11 +228,40 @@ export default function ResultScreen({ result, onRestart }) {
           </button>
         </div>
 
-        <p className="mt-10 text-center text-[10px] tracking-[0.25em] text-gray-light">
+        <p className="mt-10 text-center text-[11px] tracking-[0.25em] text-gray-mid">
           TCMP · TUNNEL · CAVE · MINDSET · PROFILE
         </p>
       </div>
+
+      <BackToTop />
     </div>
+  );
+}
+
+function BackToTop() {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setVisible(window.scrollY > 600);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+  return (
+    <button
+      type="button"
+      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+      aria-label="페이지 상단으로"
+      className={[
+        'fixed bottom-6 right-6 z-20 inline-flex items-center justify-center w-11 h-11 rounded-full',
+        'bg-ink/85 backdrop-blur-sm text-cream shadow-lg hover:bg-ink',
+        'transition-all duration-300',
+        visible
+          ? 'opacity-100 translate-y-0 pointer-events-auto'
+          : 'opacity-0 translate-y-2 pointer-events-none',
+      ].join(' ')}
+    >
+      <ArrowUp size={18} strokeWidth={1.75} />
+    </button>
   );
 }
 
@@ -266,7 +317,7 @@ function IndicatorBar({ indicator, score, letter }) {
           style={{ left: `${cutoffPct}%` }}
         />
       </div>
-      <div className="mt-1.5 text-[10px] tracking-[0.15em] text-gray-light">
+      <div className="mt-1.5 text-[11px] tracking-[0.15em] text-gray-mid">
         기준선 {cutoff} · {isLight ? indicator.lightName : indicator.darkName}
       </div>
     </div>
