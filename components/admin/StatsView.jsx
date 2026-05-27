@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Download, RefreshCw, Trash2, ArrowLeft } from 'lucide-react';
+import { Download, RefreshCw, Trash2, ArrowLeft, ChevronDown } from 'lucide-react';
 import indicators from '../../data/indicators.json';
 import codesData from '../../data/codes.json';
 import { DEMOGRAPHIC_FIELDS, labelFor } from '../../lib/demographics';
@@ -196,8 +196,8 @@ export default function StatsView({ history, onRefresh }) {
               />
             </div>
 
-            {/* 영역별 분포 */}
-            <Block title="영역별 분포">
+            {/* 영역별 분포 — 기본 펼침 */}
+            <Block title="영역별 분포" defaultOpen>
               {zoneDist.map((z) => (
                 <BarRow
                   key={z.key}
@@ -209,7 +209,7 @@ export default function StatsView({ history, onRefresh }) {
             </Block>
 
             {/* 코드별 분포 */}
-            <Block title={`코드별 분포 (16종 중 ${codeDist.length}종 응답)`}>
+            <Block title="코드별 분포" meta={`16종 중 ${codeDist.length}종 응답`}>
               {codeDist.map(([code, count]) => (
                 <BarRow
                   key={code}
@@ -306,12 +306,35 @@ function SummaryCard({ label, value, small = false }) {
   );
 }
 
-function Block({ title, children }) {
+function Block({ title, meta, defaultOpen = false, children }) {
   return (
-    <section className="mt-12 anim-fade-up">
-      <div className="text-[11px] tracking-[0.3em] text-gray-mid mb-5">{title}</div>
-      <div className="space-y-3">{children}</div>
-    </section>
+    <details
+      open={defaultOpen}
+      className="group mt-6 anim-fade-up border-t border-beige-dark/60 [&[open]]:border-ink/20"
+    >
+      <summary
+        className="list-none cursor-pointer select-none flex items-center justify-between gap-3 py-5 [&::-webkit-details-marker]:hidden focus:outline-none focus-visible:ring-1 focus-visible:ring-ink/30 rounded"
+      >
+        <div className="flex items-baseline gap-3 min-w-0 flex-1">
+          <span className="inline-block w-[3px] h-4 bg-gold shrink-0 self-center" aria-hidden />
+          <h2 className="font-display-kr text-[17px] sm:text-[19px] text-ink truncate">
+            {title}
+          </h2>
+          {meta && (
+            <span className="text-[11px] tracking-[0.15em] text-gray-mid whitespace-nowrap">
+              {meta}
+            </span>
+          )}
+        </div>
+        <ChevronDown
+          size={18}
+          strokeWidth={1.5}
+          className="text-gray-mid transition-transform duration-300 group-open:rotate-180 shrink-0"
+          aria-hidden
+        />
+      </summary>
+      <div className="pt-2 pb-6 space-y-3">{children}</div>
+    </details>
   );
 }
 
