@@ -70,6 +70,31 @@ export default function StatsView({ history, onRefresh }) {
     });
   }, [history]);
 
+  // 인구통계 × 영역 교차표 (옵션별 영역 분포)
+  const demoZoneCross = useMemo(() => {
+    return DEMOGRAPHIC_FIELDS.map((f) => {
+      const rows = [];
+      for (const opt of f.options) {
+        const zoneCounts = Object.fromEntries(ZONE_ORDER.map((z) => [z, 0]));
+        let rowTotal = 0;
+        for (const e of history) {
+          if (e.demographics?.[f.key] !== opt.value) continue;
+          const zone = codesData[e.code]?.zone;
+          if (zone && zoneCounts[zone] !== undefined) {
+            zoneCounts[zone]++;
+            rowTotal++;
+          }
+        }
+        if (rowTotal > 0) {
+          rows.push({ value: opt.value, label: opt.label, total: rowTotal, zoneCounts });
+        }
+      }
+      // 응답 많은 옵션부터
+      rows.sort((a, b) => b.total - a.total);
+      return { key: f.key, label: f.label, rows };
+    }).filter((d) => d.rows.length > 0);
+  }, [history]);
+
   function handleDownload() {
     const csv = historyToCsv(history);
     const ts = new Date();
@@ -207,6 +232,32 @@ export default function StatsView({ history, onRefresh }) {
               ))}
             </Block>
 
+            {/* 인구통계 × 영역 교차 */}
+            {demoZoneCross.length > 0 && (
+              <Block title="인구통계 × 영역 분포">
+                <ZoneLegend />
+                <div className="space-y-7 mt-2">
+                  {demoZoneCross.map((d) => (
+                    <div key={d.key}>
+                      <div className="text-[12px] tracking-[0.2em] text-gray-mid mb-3">
+                        {d.label}
+                      </div>
+                      <div className="space-y-3">
+                        {d.rows.map((r) => (
+                          <ZoneStackRow
+                            key={r.value}
+                            label={r.label}
+                            total={r.total}
+                            zoneCounts={r.zoneCounts}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </Block>
+            )}
+
             {/* 인구통계별 분포 */}
             <Block title="응답자 인구통계">
               <div className="grid sm:grid-cols-2 gap-x-8 gap-y-8">
@@ -313,6 +364,64 @@ function IndicatorAvgRow({ id, avg, max, name, cutoff }) {
       </div>
       <div className="mt-1 text-[10px] tracking-[0.15em] text-gray-light">
         기준선 {cutoff} · 평균 {isLight ? '이상' : '미만'}
+      </div>
+    </div>
+  );
+}
+
+function ZoneLegend() {
+  return (
+    <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-1 text-[10px] tracking-[0.15em] text-gray-mid">
+      {ZONE_ORDER.map((z) => (
+        <span key={z} className="inline-flex items-center gap-1.5">
+          <span
+            className="inline-block w-2.5 h-2.5 rounded-sm"
+            style={{ backgroundColor: indicators.zones[z].color }}
+          />
+          {indicators.zones[z].label}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function ZoneStackRow({ label, total, zoneCounts }) {
+  return (
+    <div>
+      <div className="flex items-baseline justify-between mb-1.5 gap-3">
+        <div className="text-[13px] text-gray-text truncate">{label}</div>
+        <div className="font-code text-[12px] text-gray-dark whitespace-nowrap">
+          {total} <span className="text-gray-light">건</span>
+        </div>
+      </div>
+      <div className="relative h-2 w-full bg-beige-mid/60 rounded-full overflow-hidden flex">
+        {ZONE_ORDER.map((z) => {
+          const c = zoneCounts[z] || 0;
+          if (c === 0) return null;
+          const pct = (c / total) * 100;
+          const zoneMeta = indicators.zones[z];
+          return (
+            <div
+              key={z}
+              className="h-full transition-all duration-700 ease-out"
+              style={{ width: `${pct}%`, backgroundColor: zoneMeta.color }}
+              title={`${zoneMeta.label}: ${c}건 (${pct.toFixed(0)}%)`}
+            />
+          );
+        })}
+      </div>
+      <div className="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-[10px] tracking-[0.1em] text-gray-light">
+        {ZONE_ORDER.map((z) => {
+          const c = zoneCounts[z] || 0;
+          if (c === 0) return null;
+          const pct = (c / total) * 100;
+          return (
+            <span key={z}>
+              {indicators.zones[z].label} {c}
+              <span className="text-gray-light/70"> · {pct.toFixed(0)}%</span>
+            </span>
+          );
+        })}
       </div>
     </div>
   );
