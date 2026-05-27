@@ -10,9 +10,9 @@ export default function ProgressBar({ current, total, label = 'TUNNEL · CAVE' }
         <span className="font-code text-[13px] tracking-[0.2em] text-gray-dark">{cur} / {tot}</span>
         <span>{label}</span>
       </div>
-      <div className="h-px w-full bg-beige-mid relative overflow-hidden">
+      <div className="h-1.5 w-full bg-beige-mid rounded-full relative overflow-hidden">
         <div
-          className="absolute left-0 top-0 h-px bg-gold transition-all duration-500 ease-out"
+          className="absolute left-0 top-0 h-full bg-gold rounded-full transition-all duration-500 ease-out"
           style={{ width: `${pct}%` }}
         />
       </div>

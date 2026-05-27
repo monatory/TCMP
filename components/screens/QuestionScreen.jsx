@@ -38,7 +38,7 @@ export default function QuestionScreen({ screenIndex, answers, onAnswer, onPrev,
           <ProgressBar current={screenIndex} total={TOTAL} />
           <div className="mt-10">
             <div className="flex items-baseline gap-3">
-              <span className="text-[11px] tracking-[0.3em] text-gold uppercase">
+              <span className="text-[12px] font-medium tracking-[0.3em] text-gold-dark uppercase">
                 지표 {screen.indicator}
               </span>
               {screen.part && (

@@ -20,7 +20,7 @@ export default function DemographicsScreen({ value, onPick, onPrev, onNext }) {
     <div className="min-h-screen px-6 py-10 sm:py-14">
       <div className="mx-auto w-full max-w-2xl">
         <header className="anim-fade-up">
-          <div className="text-[11px] tracking-[0.3em] text-gold uppercase">
+          <div className="text-[12px] font-medium tracking-[0.3em] text-gold-dark uppercase">
             시작 전에
           </div>
           <h2 className="mt-3 font-display-kr text-[24px] sm:text-[30px] text-ink">
@@ -53,7 +53,7 @@ export default function DemographicsScreen({ value, onPick, onPrev, onNext }) {
                       onClick={() => pick(field.key, opt.value)}
                       aria-pressed={selected}
                       className={[
-                        'px-4 py-2 rounded-full font-serif-kr text-[13px] border transition-colors duration-200',
+                        'inline-flex items-center justify-center min-h-[44px] px-4 rounded-full font-serif-kr text-[14px] border transition-colors duration-200',
                         selected
                           ? 'bg-ink text-cream border-ink'
                           : 'bg-transparent text-gray-text border-beige-dark hover:border-ink',

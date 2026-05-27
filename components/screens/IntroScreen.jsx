@@ -18,7 +18,7 @@ export default function IntroScreen({ onStart, latest, onShowLatest }) {
             <br />
             사이에서
           </h1>
-          <p className="mt-5 font-code italic text-[18px] sm:text-[20px] text-gold tracking-wide">
+          <p className="mt-5 font-code italic text-[15px] sm:text-[20px] text-gold tracking-wide">
             TCMP · Tunnel-Cave Mindset Profile
           </p>
         </div>

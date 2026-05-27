@@ -66,7 +66,11 @@ export default function ResultScreen({ result, onRestart }) {
         </div>
 
         <div className="mt-10 text-center">
-          <div className="flex justify-center items-baseline gap-3 sm:gap-5">
+          <h1 className="sr-only">결과 코드 {code} · {data.nickname}</h1>
+          <div
+            className="flex justify-center items-baseline gap-3 sm:gap-5"
+            aria-hidden="true"
+          >
             {letters.map((l, i) => (
               <span
                 key={i}
@@ -94,7 +98,7 @@ export default function ResultScreen({ result, onRestart }) {
 
         {/* tagline */}
         <div className="mt-12 anim-fade-up">
-          <blockquote className="border-l-2 border-gold pl-5 py-2 prose-kr italic text-[15px] text-gray-text">
+          <blockquote className="border-l-4 border-gold pl-5 py-2 prose-kr italic text-[15px] text-gray-text">
             {data.tagline}
           </blockquote>
         </div>

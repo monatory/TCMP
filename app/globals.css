@@ -15,6 +15,13 @@ html, body {
 
 * { box-sizing: border-box; }
 
+/* 키보드 포커스 인디케이터 — 잉크 톤의 부드러운 ring */
+:where(button, a, summary, [role="button"], input, select, textarea):focus-visible {
+  outline: 2px solid rgba(26, 22, 18, 0.45);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
 /* 종이 질감 — 따뜻한 빛의 얼룩 여러 겹 + 아주 옅은 결 */
 .paper-texture { position: relative; }
 
