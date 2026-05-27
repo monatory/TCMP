@@ -1,0 +1,31 @@
+name: Test
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  scoring-tests:
+    name: Scoring regression tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run scoring tests (3 spec cases)
+        run: node scripts/test-scoring.mjs
+
+      - name: Run 16-codes roundtrip tests
+        run: node scripts/test-16-codes-roundtrip.mjs
