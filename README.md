@@ -1,5 +1,10 @@
 # TCMP — Tunnel-Cave Mindset Profile
 
+> **2026-10-07 운영 이전 안내** — TCMP 진단은 https://tcmp-eb8ab.web.app (Firebase, 응답 중앙 수집)에서 운영합니다.
+> 이 저장소의 GitHub Pages 주소(https://monatory.github.io/TCMP/)는 예전 QR·링크용 **넘겨주기 페이지**(`redirect/`)만 배포하며,
+> 진단은 `web.app/?ch=QR-LEGACY`, 관리자는 `web.app/admin/` 으로 이동합니다. 아래 앱 소스는 참고용 보존본입니다.
+
+
 20문항 5점 척도 한국어 심리 자가진단 웹 앱. 4지표로 측정해 16가지 마인드셋 코드 중 하나로 결과를 도출합니다.
 
 ## 🌐 배포 (GitHub Pages)

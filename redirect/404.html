@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>TCMP · 새 주소로 이동합니다</title>
+  <link rel="canonical" href="https://tcmp-eb8ab.web.app/">
+  <!--
+    TCMP 진단은 2026-06부터 https://tcmp-eb8ab.web.app 에서 운영한다(응답 중앙 수집).
+    이 주소(monatory.github.io/TCMP)는 예전 QR·링크용으로, 모든 접속을 새 주소로 넘긴다.
+      · /TCMP/ (진단)        → https://tcmp-eb8ab.web.app/?ch=QR-LEGACY  (기존 ?ch= 가 있으면 그대로)
+      · /TCMP/admin/ (관리자) → https://tcmp-eb8ab.web.app/admin/
+    같은 파일을 index.html · 404.html · admin/index.html 로 배포한다.
+  -->
+  <noscript><meta http-equiv="refresh" content="0; url=https://tcmp-eb8ab.web.app/?ch=QR-LEGACY"></noscript>
+  <script>
+    (function () {
+      var TARGET = 'https://tcmp-eb8ab.web.app';
+      var fallback = TARGET + '/?ch=QR-LEGACY';
+      try {
+        var path = location.pathname.replace(/^\/TCMP(?=\/|$)/i, '');
+        var isAdmin = /^\/admin(\/|$)/i.test(path);
+        var params = new URLSearchParams(location.search);
+        if (!isAdmin && !params.get('ch')) params.set('ch', 'QR-LEGACY');
+        var qs = params.toString();
+        location.replace(TARGET + (isAdmin ? '/admin/' : '/') + (qs ? '?' + qs : '') + location.hash);
+      } catch (e) {
+        location.replace(fallback);
+      }
+    })();
+  </script>
+  <style>
+    :root { color-scheme: light; }
+    body { margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+           background: #F5F1EA; color: #1A1612; padding: 24px;
+           font-family: Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+    main { max-width: 420px; text-align: center; line-height: 1.7; }
+    h1 { font-size: 22px; font-weight: 600; margin: 0 0 12px; }
+    p { margin: 0 0 20px; color: #5A5249; font-size: 15px; }
+    a { display: inline-block; padding: 12px 28px; border-radius: 999px; background: #1A1612; color: #F5F1EA;
+        text-decoration: none; font-size: 15px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>새 주소로 이동합니다</h1>
+    <p>TCMP 진단은 이제 새 주소에서 진행됩니다.<br>자동으로 이동하지 않으면 아래 버튼을 눌러 주세요.</p>
+    <a id="go" href="https://tcmp-eb8ab.web.app/?ch=QR-LEGACY">TCMP 진단으로 이동</a>
+  </main>
+</body>
+</html>

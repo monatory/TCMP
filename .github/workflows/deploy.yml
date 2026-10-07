@@ -1,5 +1,11 @@
 name: Deploy to GitHub Pages
 
+# 2026-10-07: TCMP 운영은 https://tcmp-eb8ab.web.app (Firebase, 응답 중앙 수집)으로 이전.
+# 이 Pages 주소(monatory.github.io/TCMP)는 예전 QR·링크가 계속 쓰이므로,
+# 앱을 빌드하지 않고 redirect/ 의 넘겨주기 페이지만 배포해 모든 접속을 새 주소로 보낸다
+# (진단 → web.app/?ch=QR-LEGACY, 관리자 → web.app/admin/).
+# 예전 앱 배포로 되돌리려면 이 커밋을 revert 하면 된다.
+
 on:
   push:
     branches: [main, master]
@@ -21,35 +27,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run scoring tests (regression gate)
-        run: |
-          node scripts/test-scoring.mjs
-          node scripts/test-16-codes-roundtrip.mjs
-
-      - name: Build (Next.js static export)
-        run: npm run build
-        env:
-          NODE_ENV: production
-
-      - name: Add .nojekyll (Pages가 _next 폴더를 무시하지 않게)
-        run: touch out/.nojekyll
-
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload artifact
+      - name: Upload artifact (넘겨주기 페이지만)
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./out
+          path: ./redirect
 
   deploy:
     needs: build
