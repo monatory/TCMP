@@ -11,20 +11,52 @@
     이 주소(monatory.github.io/TCMP)는 예전 QR·링크용으로, 모든 접속을 새 주소로 넘긴다.
       · /TCMP/ (진단)        → https://tcmp-eb8ab.web.app/?ch=QR-LEGACY  (기존 ?ch= 가 있으면 그대로)
       · /TCMP/admin/ (관리자) → https://tcmp-eb8ab.web.app/admin/
+    예전 앱은 응답을 이 기기의 localStorage(tcmp.history.v2/v1)에만 저장했다.
+    그 기록이 있으면 URL 해시(#legacy=…, 서버로 전송되지 않음)에 실어 넘기고,
+    새 앱(components/LegacyImport.jsx)이 검증 후 중앙 저장소에 한 번만 기록한다.
     같은 파일을 index.html · 404.html · admin/index.html 로 배포한다.
   -->
   <noscript><meta http-equiv="refresh" content="0; url=https://tcmp-eb8ab.web.app/?ch=QR-LEGACY"></noscript>
   <script>
     (function () {
-      var TARGET = 'https://tcmp-eb8ab.web.app';
+      // 로컬 시험(localhost)에서는 개발 서버로 넘긴다. 운영 주소에서는 항상 web.app.
+      var local = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+      var TARGET = local ? 'http://localhost:3000' : 'https://tcmp-eb8ab.web.app';
       var fallback = TARGET + '/?ch=QR-LEGACY';
+
+      // 이 기기에 남은 예전 진단 기록 → [시각, 코드, 점수1~4, 성별, 연령, 직업, 학력]
+      function legacyPayload() {
+        try {
+          var raw = localStorage.getItem('tcmp.history.v2') || localStorage.getItem('tcmp.history.v1');
+          var list = raw ? JSON.parse(raw) : null;
+          if (!list || !list.length) return '';
+          var safe = function (v) { return (typeof v === 'string' && /^[a-z0-9_]{1,24}$/.test(v)) ? v : ''; };
+          var rows = [];
+          for (var i = 0; i < list.length && rows.length < 500; i++) {
+            var e = list[i] || {};
+            var s = e.scores || {};
+            var d = e.demographics || {};
+            if (typeof e.timestamp !== 'number' || typeof e.code !== 'string') continue;
+            rows.push([Math.round(e.timestamp), e.code, s[1], s[2], s[3], s[4],
+              safe(d.gender), safe(d.age), safe(d.occupation), safe(d.education)]);
+          }
+          if (!rows.length) return '';
+          return btoa(JSON.stringify({ v: 1, e: rows })).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+        } catch (err) {
+          return '';
+        }
+      }
+
       try {
         var path = location.pathname.replace(/^\/TCMP(?=\/|$)/i, '');
         var isAdmin = /^\/admin(\/|$)/i.test(path);
         var params = new URLSearchParams(location.search);
         if (!isAdmin && !params.get('ch')) params.set('ch', 'QR-LEGACY');
         var qs = params.toString();
-        location.replace(TARGET + (isAdmin ? '/admin/' : '/') + (qs ? '?' + qs : '') + location.hash);
+        var legacy = legacyPayload();
+        var hash = location.hash.replace(/^#/, '');
+        if (legacy) hash = (hash ? hash + '&' : '') + 'legacy=' + legacy;
+        location.replace(TARGET + (isAdmin ? '/admin/' : '/') + (qs ? '?' + qs : '') + (hash ? '#' + hash : ''));
       } catch (e) {
         location.replace(fallback);
       }
@@ -45,7 +77,7 @@
 <body>
   <main>
     <h1>새 주소로 이동합니다</h1>
-    <p>TCMP 진단은 이제 새 주소에서 진행됩니다.<br>자동으로 이동하지 않으면 아래 버튼을 눌러 주세요.</p>
+    <p>TCMP 진단은 이제 새 주소에서 진행됩니다.<br>이 기기에 남아 있는 이전 진단 기록도 함께 옮겨집니다.<br>자동으로 이동하지 않으면 아래 버튼을 눌러 주세요.</p>
     <a id="go" href="https://tcmp-eb8ab.web.app/?ch=QR-LEGACY">TCMP 진단으로 이동</a>
   </main>
 </body>
